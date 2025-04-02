@@ -1,20 +1,19 @@
-variable "my_region" {
-  description = "AWS region"
-  type        = string
+variable "aws_region" {
+  description = "AWS Region"
   default     = "us-east-1"
+}
+
+variable "ami_id" {
+  description = "Amazon Machine Image (AMI) ID"
+  default     = "ami-0c55b159cbfafe1f0" # Amazon Linux 2 (update this for your region)
+}
+
+variable "instance_type" {
+  description = "Instance type for EC2"
+  default     = "t2.micro"
 }
 
 variable "key_name" {
   description = "Name of the SSH key pair"
-  type        = string
-  default     = "ec2-vpc-key"
-}
-
-variable "tags" {
-  description = "Common tags for resources"
-  type        = map(string)
-  default = {
-    Environment = "Dev"
-    Owner       = "Admin"
-  }
+  default     = "terraform-key"
 }
