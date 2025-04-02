@@ -17,3 +17,9 @@ variable "key_name" {
   description = "Name of the SSH key pair"
   default     = "terraform-key"
 }
+
+variable "inst_count" {
+  description = "Number of EC2 instances to create"
+  type        = number
+  default     = 1  # Change this value as needed
+}
