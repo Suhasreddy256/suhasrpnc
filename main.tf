@@ -107,7 +107,7 @@ resource "aws_security_group" "ssh_http" {
 
 # Create EC2 Instance
 resource "aws_instance" "my_amazon_ec2" {
-  ami                    = var.ami_id
+  ami                    = ami-00a929b66ed6e0de6
   instance_type          = var.instance_type
   key_name               = aws_key_pair.deployer.key_name
   subnet_id              = aws_subnet.public1.id  # ✅ Fixed: Declared subnet
