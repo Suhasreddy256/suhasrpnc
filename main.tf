@@ -31,14 +31,14 @@ resource "aws_vpc" "main_vpc" {
   }
 }
 
-# Create a Subnet
-resource "aws_subnet" "subnet_1" {
+# Create a Public Subnet
+resource "aws_subnet" "public1" {
   vpc_id                  = aws_vpc.main_vpc.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "Terraform-Subnet"
+    Name = "Terraform-Public-Subnet"
   }
 }
 
@@ -67,12 +67,12 @@ resource "aws_route_table" "route_table" {
 
 # Associate Route Table with Subnet
 resource "aws_route_table_association" "route_assoc" {
-  subnet_id      = aws_subnet.subnet_1.id
+  subnet_id      = aws_subnet.public1.id
   route_table_id = aws_route_table.route_table.id
 }
 
 # Create Security Group
-resource "aws_security_group" "sg" {
+resource "aws_security_group" "ssh_http" {
   vpc_id = aws_vpc.main_vpc.id
   name   = "allow_ssh_http"
 
@@ -106,13 +106,14 @@ resource "aws_security_group" "sg" {
 }
 
 # Create EC2 Instance
-resource "aws_instance" "ec2_instance" {
+resource "aws_instance" "my_amazon_ec2" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
   key_name               = aws_key_pair.deployer.key_name
-  subnet_id              = aws_subnet.subnet_1.id
-  security_groups        = [aws_security_group.sg.name]
+  subnet_id              = aws_subnet.public1.id  # ✅ Fixed: Declared subnet
+  vpc_security_group_ids = [aws_security_group.ssh_http.id]  # ✅ Fixed: Declared security group
   associate_public_ip_address = true
+  count                  = var.inst_count  # ✅ Fixed: Declared in variables.tf
 
   tags = {
     Name = "Terraform-EC2"
